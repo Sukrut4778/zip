@@ -16,10 +16,19 @@ device.name1=rosy
 block=/dev/block/platform/soc/7824900.sdhci/by-name/boot;
 is_slot_device=0;
 
-
 ## AnyKernel methods (DO NOT CHANGE)
 # import patching functions/variables - see for reference
 . /tmp/anykernel/tools/ak2-core.sh;
+
+# If the kernel image and dtbs are separated in the zip
+decompressed_image=/tmp/anykernel/kernel/Image.gz-dtb
+compressed_image=$decompressed_image.gz-dtb
+if [ -f $compressed_image ]; then
+
+  # Concatenate all of the dtbs to the kernel
+  mv  /tmp/anykernel/dtbs/sdm450-qrd_rosy_aosp.dtb sdm450-qrd_rosy.dtb
+  cat $compressed_image /tmp/anykernel/dtbs/*.dtb > /tmp/anykernel/Image.gz-dtb;
+fi;
 
 ## AnyKernel install
 dump_boot;

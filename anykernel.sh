@@ -3,7 +3,7 @@
 
 ## AnyKernel setup
 # EDIFY properties
-kernel.string=WOLF KERNEL
+kernel.string=Pikachu KERNEL
 do.devicecheck=1
 do.modules=1
 do.cleanup=1

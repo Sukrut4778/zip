@@ -20,15 +20,37 @@ is_slot_device=0;
 # import patching functions/variables - see for reference
 . /tmp/anykernel/tools/ak2-core.sh;
 
+# Check for MIUI
+is_miui="$(file_getprop /system/build.prop 'ro.miui.ui.version.code')"
+if [[ -z $is_miui ]]; then
+    ui_print "You are running a custom ROM"
+    rm -rf /tmp/anykernel/modules
+
 # If the kernel image and dtbs are separated in the zip
 decompressed_image=/tmp/anykernel/kernel/Image.gz-dtb
 compressed_image=$decompressed_image.gz-dtb
 if [ -f $compressed_image ]; then
 
   # Concatenate all of the dtbs to the kernel
+  rm sdm450-qrd_rosy.dtb
   mv  /tmp/anykernel/dtbs/sdm450-qrd_rosy_aosp.dtb sdm450-qrd_rosy.dtb
-  cat $compressed_image /tmp/anykernel/dtbs/*.dtb > /tmp/anykernel/Image.gz-dtb;
+  cat $compressed_image /tmp/anykernel/dtbs/sdm450-qrd_rosy.dtb > /tmp/anykernel/Image.gz-dtb;
 fi;
+
+else
+    ui_print "You are running MIUI"
+
+# If the kernel image and dtbs are separated in the zip
+decompressed_image=/tmp/anykernel/kernel/Image.gz-dtb
+compressed_image=$decompressed_image.gz-dtb
+if [ -f $compressed_image ]; then
+
+  # Concatenate all of the dtbs to the kernel
+  rm sdm450-qrd_rosy_aosp.dtb
+  mv  /tmp/anykernel/dtbs/sdm450-qrd_rosy.dtb sdm450-qrd_rosy_aosp.dtb
+  cat $compressed_image /tmp/anykernel/dtbs/sdm450-qrd_rosy_aosp.dtb > /tmp/anykernel/Image.gz-dtb;
+fi;
+fi
 
 ## AnyKernel install
 dump_boot;
